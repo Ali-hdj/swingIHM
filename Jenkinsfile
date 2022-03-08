@@ -9,7 +9,7 @@ pipeline {
 	  stage('build && SonarQube analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    bat 'mvn clean verify sonar:sonar'
+                    bat 'mvn clean verify sonar:sonar -Dsonar.login=admin -Dsonar.password=admin'
                 }
             }
         }
