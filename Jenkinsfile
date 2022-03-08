@@ -6,10 +6,15 @@ pipeline {
                 bat 'mvn install'
             }
         }
-	  stage('SonarQube analysis') {
-	    withSonarQubeEnv('SonarQube') { // If you have configured more than one global server connection, you can specify its name
-	      sh "${scannerHome}/bin/sonar-scanner"
-	    }
-	  }
+	  stage('build && SonarQube analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    // Optionally use a Maven environment you've configured already
+                    withMaven(maven:'Maven 3.5') {
+                        sh 'mvn clean package sonar:sonar'
+                    }
+                }
+            }
+        }
     }
 }
