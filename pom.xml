@@ -3,6 +3,7 @@
     <java.version>1.8</java.version>
     <sonar.scanner.force-deprecated-java-version>true</sonar.scanner.force-deprecated-java-version>
     <sonar.sources>src</sonar.sources>
+    <sonar.binaries>bin</sonar.binaries>
 </properties>
   <modelVersion>4.0.0</modelVersion>
   <groupId>TwitUp</groupId>
