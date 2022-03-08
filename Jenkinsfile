@@ -1,16 +1,24 @@
 pipeline {
     agent any
     stages {
-        stage('build') {
+        stage('clean') {
+            steps {
+                bat 'mvn clean'
+            }
+        }
+        stage('compile') {
+            steps {
+                bat 'mvn compile'
+            }
+        }
+        stage('install') {
             steps {
                 bat 'mvn install'
             }
         }
-	  stage('build && SonarQube analysis') {
+        stage('verify') {
             steps {
-                withSonarQubeEnv('SonarQube') {
                     bat 'mvn clean verify sonar:sonar -Dsonar.login=admin -Dsonar.password=admin'
-                }
             }
         }
     }
