@@ -2,12 +2,13 @@ package com.iup.tp.twitup.components.tweetsView;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.Label;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 
 import com.iup.tp.twitup.components.tweetComponent.TweetComponent;
 import com.iup.tp.twitup.datamodel.Twit;
@@ -24,52 +25,47 @@ public class TweetsViewComponentView extends JPanel {
 	protected TweetsViewComponentView(TweetsViewComponentControler controler) {
 		this.controler=controler;
 		
-	JPanel panelGauche=new JPanel();
-	panelGauche.setPreferredSize(new Dimension(200,100));
-	this.add(panelGauche,BorderLayout.WEST);
-	
+
+
+	this.setLayout(new BorderLayout());
 	
 	JPanel listTweetsView = new JPanel();
 	if(controler.getListtweets().size()>4) {
+		
 		listTweetsView.setLayout(new GridLayout(controler.getListtweets().size(), 1,20,10));
 	
 	for(Twit t: controler.getListtweets())
-	{
+	{//
 		listTweetsView.add((new TweetComponent(t)).getView());
-		
+	
 	}}
 	else
 	{
-		listTweetsView.setLayout(new GridLayout(controler.getListtweets().size()+2, 1,10,10));
+		listTweetsView.setLayout(new GridLayout(controler.getListtweets().size()+4, 1,20,10));
 		for(Twit t: controler.getListtweets())
 		{
 			listTweetsView.add((new TweetComponent(t)).getView());
 			
 		}
 		
-		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension(200,200));
 		
-		
-		JPanel panel2 = new JPanel();
-		panel2.setPreferredSize(new Dimension(200,200));
-		
-		//listTweetsView.add(panel);
-	//	listTweetsView.add(panel2);
+	
 		
 		
 	}
 	
-	 scrollPane = new JScrollPane(listTweetsView);
+	 scrollPane = new JScrollPane(listTweetsView, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+	            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	scrollPane.setBackground(Color.red);
+	
+	scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+	
+	scrollPane.getViewport ().setScrollMode ( JViewport.BACKINGSTORE_SCROLL_MODE );
+	scrollPane.getViewport ().setScrollMode ( JViewport.SIMPLE_SCROLL_MODE );
 	this.add(scrollPane,BorderLayout.CENTER);
 	
 	
 	}
 	
-	
-	protected JScrollPane getView ()
-	{
-		return  scrollPane;
-	}
+
 }

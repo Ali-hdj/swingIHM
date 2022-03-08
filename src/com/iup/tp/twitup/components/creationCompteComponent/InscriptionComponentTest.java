@@ -21,7 +21,7 @@ public class InscriptionComponentTest {
 		
 		
 		
-		frame.getContentPane().add((new InscriptionComponentView().getView()));
+		frame.getContentPane().add((new InscriptionComponentView(null).getView()));
 		frame.setVisible(true);
 		
 	}

@@ -33,7 +33,7 @@ public class HomePageComponentViewTest {
 		JFrame frame = new JFrame("Test componenet");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setSize(900,900);
-		frame.add((new HomePageComponent(list)).getView());
+		frame.add((new HomePageComponent(list,null)).getView());
 		
 		
 		

@@ -1,10 +1,12 @@
 package com.iup.tp.twitup.components.tweetComponent;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Label;
 import java.awt.image.BufferedImage;
@@ -26,7 +28,7 @@ public class TweetComponentView  extends JPanel{
 		
 	
 	this.setLayout(new GridBagLayout());
-
+	
 	JPanel profileAndTag = new JPanel(new FlowLayout(FlowLayout.LEFT,20,0));
 	profileAndTag.setBackground(Color.white);
 	JPanel tweetContent = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
@@ -61,11 +63,11 @@ public class TweetComponentView  extends JPanel{
 	}
 	
 	
-	Label tweetText = new Label(tweet.getText());
-	Label tagText = new Label("@Ali");
-	Label translateTextLabel = new Label("Translate Tweet");
-	Label dateText = new Label("11:29 PM . Oct 27,2020 . Twitter for Lenovo ");
-	Label infoTweet = new Label("2 Retweets   1 Quote Tweet   8 Likes ");
+	JLabel tweetText = new JLabel(tweet.getText());
+	JLabel tagText = new JLabel("@Ali");
+	JLabel translateTextLabel = new JLabel("Translate Tweet");
+	JLabel dateText = new JLabel("11:29 PM . Oct 27,2020 . Twitter for Lenovo ");
+	JLabel infoTweet = new JLabel("2 Retweets   1 Quote Tweet   8 Likes ");
 	tweetText.setFont(new Font("Serif", Font.BOLD, 30));
 	dateText.setFont(new Font("Serif", Font.BOLD, 16));
 	dateText.setForeground(Color.gray);
@@ -106,7 +108,7 @@ public class TweetComponentView  extends JPanel{
 	c.gridx=0;
 	c.gridy=2;
 	this.add(translateTextLabel,c);
-	//this.add(translatetext);
+	this.add(translatetext);
 	c.anchor=GridBagConstraints.WEST;
 	c.gridx=0;
 	c.gridy=3;

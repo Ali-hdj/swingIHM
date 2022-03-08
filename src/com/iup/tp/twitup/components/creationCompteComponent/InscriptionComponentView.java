@@ -6,18 +6,26 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Label;
 import java.awt.TextField;
+import java.util.HashSet;
+import java.util.UUID;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 
+import com.iup.tp.twitup.datamodel.User;
+
 public class InscriptionComponentView extends JPanel {
 	
+	InscriptionComponentControler controler;
 	
-	public InscriptionComponentView()
+	public InscriptionComponentView(InscriptionComponentControler controler)
 	{
 		super();
+		
+		this.controler=controler;
 		this.setPreferredSize(new Dimension(600,600));
 		
 		JPanel form = new JPanel();
@@ -36,7 +44,7 @@ public class InscriptionComponentView extends JPanel {
 		//TextField avatar = new TextField();
 		
 		
-		String s1[] = { "Java", "PHP", "Python", "C++", "Ruby" }; 
+		String s1[] = { "Garçon", "Petite Fille", "Homme d'affaire", "Petit chat", "Homme" }; 
 		  
         // créer une case à cocher
 		JComboBox avatar = new JComboBox(s1); 
@@ -51,7 +59,7 @@ public class InscriptionComponentView extends JPanel {
 		JButton inscriptionBtn= new JButton("S'inscrire");
 		inscriptionBtn.setFont(new Font("Serif", Font.BOLD, 30));
 		
-		Label messageLabel= new Label("");
+		JLabel messageLabel= new JLabel("");
 		messageLabel.setFont(new Font("Serif", Font.BOLD, 20));
 		
 		inscriptionBtn.addActionListener(e->{
@@ -75,8 +83,14 @@ public class InscriptionComponentView extends JPanel {
 				return ;
 			}
 			
+			
+			User user=new User(UUID.randomUUID(), nom.getText(), mdp.getText(), nom.getText(), new HashSet<String>(), "AliProfile.png");
+			
+			 this.controler.addUser(user);
 			messageLabel.setBackground(Color.DARK_GRAY);
 			messageLabel.setText(" Inscription Reussi ! :)  ");
+			tag.setBackground(Color.green);
+			nom.setBackground(Color.green);
 			messageLabel.setForeground(Color.green);
 			System.out.println("choisi "+(String) avatar.getSelectedItem());
 		});

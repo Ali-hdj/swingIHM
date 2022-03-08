@@ -10,6 +10,9 @@ import java.util.UUID;
  * @author S.Lucas
  */
 public class User {
+	
+	
+	
 	/**
 	 * Identifiant unique de l'utilisateur.
 	 */

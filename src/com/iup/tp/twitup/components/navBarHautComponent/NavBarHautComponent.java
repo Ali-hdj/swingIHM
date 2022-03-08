@@ -1,8 +1,5 @@
 package com.iup.tp.twitup.components.navBarHautComponent;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JPanel;
 
 public class NavBarHautComponent {
@@ -11,19 +8,20 @@ public class NavBarHautComponent {
 	
 	NavBarHautComponentControler controler;
 	
-	List<NavBarHautComponentListener> listeners = new ArrayList<>();
+	
 	
 	public NavBarHautComponent()
 	{
-		this.view = new NavBarHautComponentView();
+		
 		
 		this.controler = new NavBarHautComponentControler();
+		this.view = new NavBarHautComponentView(controler);
 		
 	}
 	
 	public void addListener(NavBarHautComponentListener l)
 	{
-		this.listeners.add(l);
+		this.controler.listeners.add(l);
 	}
 	
 

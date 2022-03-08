@@ -221,7 +221,7 @@ public class TwitupMock {
 		User randomUser = new ArrayList<User>(this.mDatabase.getUsers()).get(Math.max(0, userIndex - 1));
 
 		// Création d'un twit fictif
-		Twit newTwit = new Twit(randomUser, "Twit fictif!! #Mock #test ;)");
+		Twit newTwit = new Twit(randomUser, "Twit fictif!! @tibaut !!!!!!!!!!! ;)");
 
 		return newTwit;
 	}

@@ -3,7 +3,7 @@ package com.iup.tp.twitup.components.tweetsView;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JScrollPane;
+import javax.swing.JPanel;
 
 import com.iup.tp.twitup.datamodel.Twit;
 
@@ -39,9 +39,9 @@ public class TweetsViewComponent {
 	}
 	
 	
-	public JScrollPane getView ()
+	public JPanel getView ()
 	{
-		return view.scrollPane;
+		return view;
 	}
 	
 }

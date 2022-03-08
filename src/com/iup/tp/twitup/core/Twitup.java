@@ -25,7 +25,10 @@ import javax.swing.SwingUtilities;
 
 import com.iup.tp.twitup.components.connexioncomponent.ConnexionCompListener;
 import com.iup.tp.twitup.components.connexioncomponent.ConnexionComponent;
+import com.iup.tp.twitup.components.creationCompteComponent.InscriptionComponent;
+import com.iup.tp.twitup.components.creationCompteComponent.InscriptionComponentView;
 import com.iup.tp.twitup.components.homePage.HomePageComponent;
+import com.iup.tp.twitup.components.homePage.HomePageComponentListener;
 import com.iup.tp.twitup.datamodel.Database;
 import com.iup.tp.twitup.datamodel.IDatabase;
 import com.iup.tp.twitup.datamodel.IDatabaseObserver;
@@ -35,13 +38,14 @@ import com.iup.tp.twitup.events.file.IWatchableDirectory;
 import com.iup.tp.twitup.events.file.WatchableDirectory;
 import com.iup.tp.twitup.ihm.TwitupMainView;
 import com.iup.tp.twitup.ihm.TwitupMock;
+import com.iup.tp.twitup.session.SessionVariables;
 
 /**
  * Classe principale l'application.
  * 
  * @author S.Lucas
  */
-public class Twitup implements IDatabaseObserver,ConnexionCompListener{
+public class Twitup implements IDatabaseObserver,ConnexionCompListener,HomePageComponentListener{
 	/**
 	 * Base de données.
 	 */
@@ -51,6 +55,8 @@ public class Twitup implements IDatabaseObserver,ConnexionCompListener{
 	
 	protected JFrame mFrame;
 	
+	
+	protected User userConnected;
 	
 	/**
 	 * Gestionnaire des entités contenu de la base de données.
@@ -158,6 +164,7 @@ public class Twitup implements IDatabaseObserver,ConnexionCompListener{
 	protected void initDatabase() {
 		mDatabase = new Database();
 		mEntityManager = new EntityManager(mDatabase);
+		this.mEntityManager.setExchangeDirectory("C:\\Users\\mrali\\Desktop\\exchange");
 	}
 
 	/**
@@ -172,13 +179,14 @@ public class Twitup implements IDatabaseObserver,ConnexionCompListener{
 
 		mWatchableDirectory.initWatching();
 		mWatchableDirectory.addObserver(mEntityManager);
+		
 	}
 	
 	 JList<String> myList;
 
 	public void show() {
 		
-    mFrame = new JFrame("MOCK");
+    mFrame = new JFrame("Twitup");
 		
 		
 		String[] data = {};
@@ -191,7 +199,7 @@ public class Twitup implements IDatabaseObserver,ConnexionCompListener{
 						// Custom de l'affichage
 						JFrame frame = Twitup.this.mFrame;
 						frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-						frame.setSize(900,900);
+						frame.setSize(950,900);
 						// Affichage
 						Twitup.this.mFrame.setVisible(true);
 
@@ -231,7 +239,7 @@ public class Twitup implements IDatabaseObserver,ConnexionCompListener{
 					    // disable the "All files" option.
 					    //
 					    chooser.setAcceptAllFileFilterUsed(false);
-					    //    
+					    //    //
 					    
 					
 					
@@ -270,49 +278,33 @@ public class Twitup implements IDatabaseObserver,ConnexionCompListener{
 						menuItem.setMnemonic(KeyEvent.VK_B);
 						
 						menuItem.addActionListener(e->{
+							if(Twitup.this.userConnected==null)
+							showConnexionComponent();
+							else
+								userConnected(Twitup.this.userConnected);
 							
-							JPanel connexion = new JPanel();
-							connexion.setPreferredSize(new Dimension(200,200));
-							connexion.setLayout(new BorderLayout());
-							
-							ConnexionComponent connexionComp=new ConnexionComponent(mDatabase);
-							 connexionComp.addListener(Twitup.this);
-							 
-							 connexion.add(connexionComp.getVue());
-							Twitup.this.mFrame.getContentPane().setLayout(new GridLayout(3,3));
-							Label l = new Label();
-							l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
-							Twitup.this.mFrame.getContentPane().add(l);
-							 l = new Label();
-							l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
-							Twitup.this.mFrame.getContentPane().add(l);
-							 l = new Label();
-							l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
-							Twitup.this.mFrame.getContentPane().add(l);
-							 l = new Label();
-							l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
-							Twitup.this.mFrame.getContentPane().add(l);
-							
-							Twitup.this.mFrame.getContentPane().add(connexionComp.getVue());
-							 l = new Label();
-							l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
-							Twitup.this.mFrame.getContentPane().add(l);
-							 l = new Label();
-							l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
-							Twitup.this.mFrame.getContentPane().add(l);
-							 l = new Label();
-							l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
-							Twitup.this.mFrame.getContentPane().add(l);
-							l = new Label();
-							l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
-							Twitup.this.mFrame.getContentPane().add(l);
-							Twitup.this.mFrame.repaint();
-							Twitup.this.mFrame.revalidate();
 						});
 						menu.add(menuItem);
 						
+						// add user 
 						
+						menuItem = new JMenuItem("Ajouter User",
+		                         new ImageIcon(".src/resources/images/editIcon_20.png"));
+		
+						menuItem.setMnemonic(KeyEvent.VK_B);
 						
+						menuItem.addActionListener(e->{
+							if(userConnected!=null) {
+								showInscriptionComponent();
+							}
+							else
+							{
+								showConnexionComponent();
+							}
+						
+						});
+						
+						menu.add(menuItem);
 						menu.getAccessibleContext().setAccessibleDescription(
 						        "Creer");
 						menuBar.add(menu);
@@ -326,13 +318,63 @@ public class Twitup implements IDatabaseObserver,ConnexionCompListener{
 				});
 		
 	}
-
 	
+	
+	private void showConnexionComponent()
+	{
+		Twitup.this.mFrame.getContentPane().removeAll();
+		JPanel connexion = new JPanel();
+		connexion.setPreferredSize(new Dimension(200,200));
+		connexion.setLayout(new BorderLayout());
+		
+		ConnexionComponent connexionComp=new ConnexionComponent(mDatabase);
+		 connexionComp.addListener(Twitup.this);
+		 
+		 connexion.add(connexionComp.getVue());
+		Twitup.this.mFrame.getContentPane().setLayout(new GridLayout(3,3));
+		Label l = new Label();
+		l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
+		Twitup.this.mFrame.getContentPane().add(l);
+		 l = new Label();
+		l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
+		Twitup.this.mFrame.getContentPane().add(l);
+		 l = new Label();
+		l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
+		Twitup.this.mFrame.getContentPane().add(l);
+		 l = new Label();
+		l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
+		Twitup.this.mFrame.getContentPane().add(l);
+		
+		Twitup.this.mFrame.getContentPane().add(connexionComp.getVue());
+		 l = new Label();
+		l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
+		Twitup.this.mFrame.getContentPane().add(l);
+		 l = new Label();
+		l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
+		Twitup.this.mFrame.getContentPane().add(l);
+		 l = new Label();
+		l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
+		Twitup.this.mFrame.getContentPane().add(l);
+		l = new Label();
+		l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
+		Twitup.this.mFrame.getContentPane().add(l);
+		Twitup.this.mFrame.repaint();
+		Twitup.this.mFrame.revalidate();
+	}
+
+	private void showInscriptionComponent()
+	{
+		Twitup.this.mFrame.getContentPane().removeAll();
+		Twitup.this.mFrame.getContentPane().setLayout(new BorderLayout());
+		Twitup.this.mFrame.getContentPane().add((new InscriptionComponent(mDatabase)).getView());
+		Twitup.this.mFrame.getContentPane().repaint();
+		Twitup.this.mFrame.getContentPane().revalidate();
+	}
 	@Override
 	public void notifyTwitAdded(Twit addedTwit) {
 		myList.add(new JTextArea(addedTwit.getText()));
-		 
-		 System.out.println("eoooo ");
+		//this.mFrame.getContentPane().repaint();
+		//this.mFrame.getContentPane().revalidate();
 		
 	}
 
@@ -366,15 +408,30 @@ public class Twitup implements IDatabaseObserver,ConnexionCompListener{
 
 	@Override
 	public void userConnected(User user) {
-		System.out.println("je suis la ");
+		this.userConnected=user;
+		SessionVariables.getSessionVariables().setConnecctedUser(user);
 		Twitup.this.mFrame.getContentPane().setLayout(new BorderLayout());
 		List<Twit> twits = new ArrayList<>();
-		twits.add(new Twit(null, "tweet !!! "));
-		twits.add(new Twit(null, "tweet !!! !!!! "));
-		
+		twits.addAll(this.mDatabase.getTwits());
+		 HomePageComponent homePage = new HomePageComponent(twits,this.mDatabase);
+		 homePage.addHomePageComponentListener(this);
+		this.mDatabase.addObserver(homePage);
 		this.mFrame.getContentPane().removeAll();
-		this.mFrame.getContentPane().add(new HomePageComponent(twits).getView(),BorderLayout.CENTER);
+		this.mFrame.getContentPane().add(homePage.getView(),BorderLayout.CENTER);
 		this.mFrame.getContentPane().repaint();
 		this.mFrame.getContentPane().revalidate();
+	}
+	
+	@Override
+	public void seDeconnecter()
+	{this.userConnected=null;
+	SessionVariables.getSessionVariables().setConnecctedUser(null);
+		showConnexionComponent();
+	}
+
+	@Override
+	public void twitAdded() {
+		
+		
 	}
 }
