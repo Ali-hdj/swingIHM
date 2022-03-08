@@ -18,7 +18,7 @@ pipeline {
         }
         stage('verify') {
             steps {
-                    bat 'mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.0.2 -Dsonar.login=admin -Dsonar.password=admin'
+                    bat 'mvn clean verify sonar:sonar -Dsonar.login=admin -Dsonar.password=admin'
             }
         }
     }
