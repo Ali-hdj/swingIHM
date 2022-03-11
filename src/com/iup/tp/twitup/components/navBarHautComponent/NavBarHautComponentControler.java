@@ -19,10 +19,19 @@ public class NavBarHautComponentControler {
 	
 	protected void profileSearched(String userRequest)
 	{
-		System.out.println(userRequest);
+		
 		for( NavBarHautComponentListener l :this.listeners)
 		{
 			l.profileSearched(userRequest);
+		}
+	}
+	
+	protected void twitsSearched(String userRequest)
+	{
+		
+		for( NavBarHautComponentListener l :this.listeners)
+		{
+			l.twitsSearched(userRequest);
 		}
 	}
 	

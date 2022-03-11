@@ -50,6 +50,7 @@ public class ConnexionPageControlerImpl implements ConnexionComponentControler {
 				user=e;
 				connected=true;
 				this.notifierConnexion(e);
+				
 			}
 		});
 		

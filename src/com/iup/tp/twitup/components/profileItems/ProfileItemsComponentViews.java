@@ -21,6 +21,7 @@ public class ProfileItemsComponentViews extends JPanel {
 	private static final long serialVersionUID = 1L;
 	ProfileItemsComponentControler controler;
 	JScrollPane scrollPane;
+	ProfileItemComponent profileItem;
 	
 	protected ProfileItemsComponentViews(ProfileItemsComponentControler controler,List<User> users)
 	{
@@ -37,15 +38,20 @@ public class ProfileItemsComponentViews extends JPanel {
 		
 		for(User u: users)
 		{//
-			listTweetsView.add((new ProfileItemComponent(u)).getView());
+		 profileItem =new ProfileItemComponent(u);
+			profileItem.addListener(this.controler.fatherControler);
+			listTweetsView.add(profileItem.getView());
 		
 		}}
 		else
 		{
+			
 			listTweetsView.setLayout(new GridLayout(users.size()+4, 1,20,10));
 			for(User u: users)
 			{
-				listTweetsView.add((new ProfileItemComponent(u)).getView());
+				profileItem =new ProfileItemComponent(u);
+				profileItem.addListener(this.controler.fatherControler);
+				listTweetsView.add((profileItem).getView());
 				
 			}
 			

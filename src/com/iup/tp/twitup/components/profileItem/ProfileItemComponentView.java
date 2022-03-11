@@ -12,10 +12,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.iup.tp.twitup.datamodel.User;
+import com.iup.tp.twitup.session.SessionVariables;
 
 public class ProfileItemComponentView extends JPanel {
 	
@@ -41,7 +43,7 @@ public class ProfileItemComponentView extends JPanel {
 	JPanel nomtext = new JPanel(new FlowLayout(FlowLayout.LEFT,0,0));
 	nomtext.add(new JLabel(user.getName()));
 	
-	
+	JButton seDesabonner=new JButton("Se desabonner");
 	
 	JLabel profileImage=null;
 	followBtn=null;
@@ -59,13 +61,28 @@ public class ProfileItemComponentView extends JPanel {
 		followBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+            	controler.followBtnClicked(user);
             	profileAndTag.remove(followBtn);
-            	profileAndTag.add(new JLabel("Already Followed"));
+            	profileAndTag.add(seDesabonner);
+            	repaint();
+            	revalidate();
+            }
+
+        });
+        
+        seDesabonner.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            	controler.unfollowBtnClicked(user);
+            	
+            	profileAndTag.remove(seDesabonner);
+            	profileAndTag.add(followBtn);
             	repaint();
             	revalidate();
             }
 
         });;
+        
 	} catch (IOException e) {
 		try {
 			wPic = ImageIO.read(this.getClass().getResource("/resources/images/AliProfile.png"));
@@ -86,7 +103,15 @@ public class ProfileItemComponentView extends JPanel {
 	profileAndTag.add(profileImage);
 	profileAndTag.add(nomtext);
 	profileAndTag.add(tagText);
-	profileAndTag.add(followBtn);
+	if(SessionVariables.getSessionVariables().getConnectedUser().isFollowing(user))
+	{
+		profileAndTag.add(seDesabonner);
+	}else 
+	{
+		if(!SessionVariables.getSessionVariables().getConnectedUser().getUserTag().equals(user.getUserTag()))
+		profileAndTag.add(followBtn);
+	}
+	
 	GridBagConstraints c= new GridBagConstraints();
 	//this.add(profileAndTag);
 	c.gridx=0;

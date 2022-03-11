@@ -5,5 +5,5 @@ import com.iup.tp.twitup.datamodel.User;
 public interface ProfileComponentItemListener {
 
 	public void followBtnClicked(User user, User Follower);
-	
+	public void unfollowBtnClicked(User user, User Follower);
 }

@@ -4,6 +4,8 @@ public interface NavBarHautComponentListener {
 
 	public void profileSearched (String userRequest);
 	
+	public void twitsSearched (String userRequest);
+	
 	public void userProfileShow();
 	
 	

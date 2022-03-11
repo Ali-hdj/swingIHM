@@ -1,5 +1,11 @@
 package com.iup.tp.twitup.components.profileItems;
 
-public class ProfileItemsComponentControler {
+import com.iup.tp.twitup.components.homePage.HomePageComponentControler;
 
+public class ProfileItemsComponentControler {
+	
+	HomePageComponentControler fatherControler;
+ public ProfileItemsComponentControler(HomePageComponentControler fatherControler) {
+	this.fatherControler=fatherControler;
+}
 }

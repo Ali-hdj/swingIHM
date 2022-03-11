@@ -142,6 +142,7 @@ public class WatchableDirectory implements IWatchableDirectory {
 			@Override
 			public void run() {
 				try {
+					
 					// Attente avant la prochaine vérification
 					Thread.sleep(POLLING_TIME);
 

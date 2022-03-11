@@ -9,20 +9,34 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Label;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.iup.tp.twitup.components.navBarHautComponent.NavBarHautComponentView;
 import com.iup.tp.twitup.datamodel.Twit;
+import com.iup.tp.twitup.datamodel.User;
+import com.iup.tp.twitup.session.SessionVariables;
 
 public class TweetComponentView  extends JPanel{
 	
-	
+	JLabel profileImage=null;
+	JLabel likeIcon=null;
+	JLabel shareIcon=null;
+	JLabel commentIcon=null;
 
+	BufferedImage LikeTwitHover=null;
+	BufferedImage LikeTwit=null;
+	
+	boolean liked = false;
+	
 	protected TweetComponentView  (Twit tweet)
 	{
 		
@@ -40,17 +54,15 @@ public class TweetComponentView  extends JPanel{
 	JPanel actionsTweet = new JPanel(new FlowLayout(FlowLayout.CENTER,100,0));
 	actionsTweet.setBackground(Color.white);
 	
-	JLabel profileImage=null;
-	JLabel likeIcon=null;
-	JLabel shareIcon=null;
-	JLabel commentIcon=null;
+	
+	
 	
 	BufferedImage wPic;
 	try {
-		wPic = ImageIO.read(this.getClass().getResource("/resources/images/AliProfile.png"));
+		wPic = ImageIO.read(this.getClass().getResource("/resources/images/"+tweet.getTwiter().getAvatarPath()));
 		profileImage = new JLabel(new ImageIcon(wPic));
-		wPic = ImageIO.read(this.getClass().getResource("/resources/images/likeTweet.png"));
-		likeIcon = new JLabel(new ImageIcon(wPic));
+		LikeTwit = ImageIO.read(this.getClass().getResource("/resources/images/likeTweet.png"));
+		likeIcon = new JLabel(new ImageIcon(LikeTwit));
 		
 		wPic = ImageIO.read(this.getClass().getResource("/resources/images/shareTweet.png"));
 		shareIcon = new JLabel(new ImageIcon(wPic));
@@ -58,15 +70,40 @@ public class TweetComponentView  extends JPanel{
 		wPic = ImageIO.read(this.getClass().getResource("/resources/images/commentIcon.png"));
 		commentIcon = new JLabel(new ImageIcon(wPic));
 		
+		LikeTwitHover= ImageIO.read(this.getClass().getResource("/resources/images/likeTweet2.png"));
 	} catch (IOException e) {
 		e.printStackTrace();
 	}
 	
+	likeIcon.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        
+        	likeIcon.setIcon(new ImageIcon(LikeTwitHover));
+        }
+
+        
+        @Override
+        public void mouseExited(MouseEvent e) {
+        	if(!liked)
+        	likeIcon.setIcon(new ImageIcon(LikeTwit));
+         }
+        
+        @Override
+        public void mousePressed(MouseEvent e) {
+        	likeIcon.setIcon(new ImageIcon(liked?LikeTwit:LikeTwitHover));
+        	liked=!liked;
+         }
+        
+    });
+	
+	
+	
 	
 	JLabel tweetText = new JLabel(tweet.getText());
-	JLabel tagText = new JLabel("@Ali");
+	JLabel tagText = new JLabel(tweet.getTwiter().getUserTag());
 	JLabel translateTextLabel = new JLabel("Translate Tweet");
-	JLabel dateText = new JLabel("11:29 PM . Oct 27,2020 . Twitter for Lenovo ");
+	JLabel dateText = new JLabel("11:29 PM . Oct 27,2020 . Twitter for Lenovo "+new Date(tweet.getEmissionDate()));
 	JLabel infoTweet = new JLabel("2 Retweets   1 Quote Tweet   8 Likes ");
 	tweetText.setFont(new Font("Serif", Font.BOLD, 30));
 	dateText.setFont(new Font("Serif", Font.BOLD, 16));

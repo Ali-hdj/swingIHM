@@ -3,7 +3,8 @@ package com.iup.tp.twitup.components.navBarHautComponent;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Label;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -11,9 +12,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.iup.tp.twitup.session.SessionVariables;
 
 public class NavBarHautComponentView extends JPanel {
 
@@ -57,16 +61,78 @@ public class NavBarHautComponentView extends JPanel {
 			e.printStackTrace();
 		}
 		
+		JCheckBox check1 = new JCheckBox("Twits"); 
 		
 		searchIcon.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-            	NavBarHautComponentView.this.controler.profileSearched(searchText.getText());
+            	if(check1.isSelected())
+            	{
+            		NavBarHautComponentView.this.controler.twitsSearched(searchText.getText());
+            		System.out.println("search twits");
+            	}else
+            	{
+            		NavBarHautComponentView.this.controler.profileSearched(searchText.getText());
+            		System.out.println("search profiles");
+            	}
+            	
             }
 
-        });;
+        });
+		
+		
+		searchText.addKeyListener(new KeyListener() {
+			
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if(e.getKeyCode()==KeyEvent.VK_ENTER) {
+					if(check1.isSelected())
+	            	{
+	            		NavBarHautComponentView.this.controler.twitsSearched(searchText.getText());
+	            		System.out.println("search twits");
+	            	}else
+	            	{
+	            		NavBarHautComponentView.this.controler.profileSearched(searchText.getText());
+	            		System.out.println("search profiles");
+	            	}
+
+					}
+			    }
+					
+				@Override
+				public void keyReleased(KeyEvent arg0) {
+					
+					
+				}
+
+				@Override
+				public void keyTyped(KeyEvent arg0) {
+					
+					
+				}}
+				);
+		
+		
+		twitterIcon.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            	NavBarHautComponentView.this.controler.profileSearched("*");
+            }
+
+        });
+		
+		
+		profileIcon.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            	NavBarHautComponentView.this.controler.profileSearched(SessionVariables.getSessionVariables().getConnectedUser().getName());
+            }
+
+        });
 		this.add(twitterIcon);
-		this.add(new JLabel());
+		
+		this.add(check1);
 		
 		this.add(searchText);
 		this.add(searchIcon);

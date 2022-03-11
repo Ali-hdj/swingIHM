@@ -45,19 +45,16 @@ import com.iup.tp.twitup.session.SessionVariables;
  * 
  * @author S.Lucas
  */
-public class Twitup implements IDatabaseObserver,ConnexionCompListener,HomePageComponentListener{
+public class Twitup implements IDatabaseObserver, ConnexionCompListener, HomePageComponentListener {
 	/**
 	 * Base de données.
 	 */
 	protected IDatabase mDatabase;
 
-	
-	
 	protected JFrame mFrame;
-	
-	
+
 	protected User userConnected;
-	
+
 	/**
 	 * Gestionnaire des entités contenu de la base de données.
 	 */
@@ -87,8 +84,6 @@ public class Twitup implements IDatabaseObserver,ConnexionCompListener,HomePageC
 	 * Nom de la classe de l'UI.
 	 */
 	protected String mUiClassName;
-	
-	
 
 	/**
 	 * Constructeur.
@@ -99,8 +94,7 @@ public class Twitup implements IDatabaseObserver,ConnexionCompListener,HomePageC
 
 		// Initialisation de la base de données
 		this.initDatabase();
-		
-		
+
 		this.mDatabase.addObserver(this);
 
 		if (this.mIsMockEnabled) {
@@ -135,14 +129,14 @@ public class Twitup implements IDatabaseObserver,ConnexionCompListener,HomePageC
 	 * pouvoir utiliser l'application</b>
 	 */
 	protected void initDirectory() {
+
+		this.initDirectory("D:/echange");
 	}
 
 	/**
-	 * Indique si le fichier donné est valide pour servire de répertoire
-	 * d'échange
+	 * Indique si le fichier donné est valide pour servire de répertoire d'échange
 	 * 
-	 * @param directory
-	 *            , Répertoire à tester.
+	 * @param directory , Répertoire à tester.
 	 */
 	protected boolean isValideExchangeDirectory(File directory) {
 		// Valide si répertoire disponible en lecture et écriture
@@ -164,7 +158,7 @@ public class Twitup implements IDatabaseObserver,ConnexionCompListener,HomePageC
 	protected void initDatabase() {
 		mDatabase = new Database();
 		mEntityManager = new EntityManager(mDatabase);
-		this.mEntityManager.setExchangeDirectory("C:\\Users\\mrali\\Desktop\\exchange");
+		this.mEntityManager.setExchangeDirectory("D:/echange");
 	}
 
 	/**
@@ -179,259 +173,234 @@ public class Twitup implements IDatabaseObserver,ConnexionCompListener,HomePageC
 
 		mWatchableDirectory.initWatching();
 		mWatchableDirectory.addObserver(mEntityManager);
-		
+
 	}
-	
-	 JList<String> myList;
+
+	JList<String> myList;
 
 	public void show() {
-		
-    mFrame = new JFrame("Twitup");
-		
-		
+
+		mFrame = new JFrame("Twitup");
+
 		String[] data = {};
-		 myList = new JList<String>(data);
-		 
+		myList = new JList<String>(data);
+
 		// Affichage dans l'EDT
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						// Custom de l'affichage
-						JFrame frame = Twitup.this.mFrame;
-						frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-						frame.setSize(950,900);
-						// Affichage
-						Twitup.this.mFrame.setVisible(true);
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				// Custom de l'affichage
+				JFrame frame = Twitup.this.mFrame;
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.setSize(980, 900);
+				// Affichage
+				Twitup.this.mFrame.setVisible(true);
 
-						//Where the GUI is created:
-						JMenuBar menuBar;
-						JMenu menu, submenu;
-						JMenuItem menuItem;
-						JRadioButtonMenuItem rbMenuItem;
-						JCheckBoxMenuItem cbMenuItem;
+				// Where the GUI is created:
+				JMenuBar menuBar;
+				JMenu menu, submenu;
+				JMenuItem menuItem;
+				JRadioButtonMenuItem rbMenuItem;
+				JCheckBoxMenuItem cbMenuItem;
 
-						//Create the menu bar.
-						menuBar = new JMenuBar();
+				// Create the menu bar.
+				menuBar = new JMenuBar();
 
-						//Build the first menu.
-						menu = new JMenu("Fichier");
-						menu.setMnemonic(KeyEvent.VK_A);
-						menu.getAccessibleContext().setAccessibleDescription(
-						        "Fichier");
-						menuBar.add(menu);
-					
+				// Build the first menu.
+				menu = new JMenu("Fichier");
+				menu.setMnemonic(KeyEvent.VK_A);
+				menu.getAccessibleContext().setAccessibleDescription("Fichier");
+				menuBar.add(menu);
 
-						menuItem = new JMenuItem("Close",
-						                         new ImageIcon("./src/resources/images/exitIcon_20.png"));
-						menuItem.addActionListener(e->System.exit(0));
-						menuItem.setMnemonic(KeyEvent.VK_B);
-						
-						menu.add(menuItem);
-						
-						/*exchange directory */
-						
-						JFileChooser chooser;
-						chooser = new JFileChooser(); 
-					    //chooser.setCurrentDirectory(new java.io.File("."));
-					    chooser.setDialogTitle("choisir exchange directory");
-					    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-					    //
-					    // disable the "All files" option.
-					    //
-					    chooser.setAcceptAllFileFilterUsed(false);
-					    //    //
-					    
-					
-					
-						menuItem = new JMenuItem("Choisir exchange directory",
-		                         new ImageIcon("./src/resources/images/editIcon_20.png"));
-		
-						menuItem.setMnemonic(KeyEvent.VK_B);
-						menu.add(menuItem);
-						menuItem.addActionListener(e->{
-							
-							if (chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) { 
-								 System.out.println(chooser.getSelectedFile().getAbsolutePath());
-								Twitup.this.mEntityManager.setExchangeDirectory(chooser.getCurrentDirectory().getAbsolutePath());
-							      
-							      }
-							    else {
-							      System.out.println("No Selection ");
-							      }
-							     
-							
-						});
-					
-						//Build the first menu.
-						menu = new JMenu("?");
-						
-						menu.getAccessibleContext().setAccessibleDescription(
-						        "à propo de l'application");
-						menuBar.add(menu);
-					
-					
-						// connexion 
-						
-						menuItem = new JMenuItem("Se connecter",
-		                         new ImageIcon(".src/resources/images/editIcon_20.png"));
-		
-						menuItem.setMnemonic(KeyEvent.VK_B);
-						
-						menuItem.addActionListener(e->{
-							if(Twitup.this.userConnected==null)
-							showConnexionComponent();
-							else
-								userConnected(Twitup.this.userConnected);
-							
-						});
-						menu.add(menuItem);
-						
-						// add user 
-						
-						menuItem = new JMenuItem("Ajouter User",
-		                         new ImageIcon(".src/resources/images/editIcon_20.png"));
-		
-						menuItem.setMnemonic(KeyEvent.VK_B);
-						
-						menuItem.addActionListener(e->{
-							if(userConnected!=null) {
-								showInscriptionComponent();
-							}
-							else
-							{
-								showConnexionComponent();
-							}
-						
-						});
-						
-						menu.add(menuItem);
-						menu.getAccessibleContext().setAccessibleDescription(
-						        "Creer");
-						menuBar.add(menu);
-					
-						
-						frame.setJMenuBar(menuBar);
-						
-						
-						
+				menuItem = new JMenuItem("Close", new ImageIcon("./src/resources/images/exitIcon_20.png"));
+				menuItem.addActionListener(e -> System.exit(0));
+				menuItem.setMnemonic(KeyEvent.VK_B);
+
+				menu.add(menuItem);
+
+				/* exchange directory */
+
+				JFileChooser chooser;
+				chooser = new JFileChooser();
+				// chooser.setCurrentDirectory(new java.io.File("."));
+				chooser.setDialogTitle("choisir exchange directory");
+				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				//
+				// disable the "All files" option.
+				//
+				chooser.setAcceptAllFileFilterUsed(false);
+				// //
+
+				menuItem = new JMenuItem("Choisir exchange directory",
+						new ImageIcon("./src/resources/images/editIcon_20.png"));
+
+				menuItem.setMnemonic(KeyEvent.VK_B);
+				menu.add(menuItem);
+				menuItem.addActionListener(e -> {
+
+					if (chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+						System.out.println(chooser.getSelectedFile().getAbsolutePath());
+						Twitup.this.mEntityManager
+								.setExchangeDirectory(chooser.getCurrentDirectory().getAbsolutePath());
+
+					} else {
+						System.out.println("No Selection ");
 					}
+
 				});
-		
+
+				// Build the first menu.
+				menu = new JMenu("?");
+
+				menu.getAccessibleContext().setAccessibleDescription("à propo de l'application");
+				menuBar.add(menu);
+
+				// connexion
+
+				menuItem = new JMenuItem("Se connecter", new ImageIcon(".src/resources/images/editIcon_20.png"));
+
+				menuItem.setMnemonic(KeyEvent.VK_B);
+
+				menuItem.addActionListener(e -> {
+					if (Twitup.this.userConnected == null)
+						showConnexionComponent();
+					else
+						userConnected(Twitup.this.userConnected);
+
+				});
+				menu.add(menuItem);
+
+				// add user
+
+				menuItem = new JMenuItem("Ajouter User", new ImageIcon(".src/resources/images/editIcon_20.png"));
+
+				menuItem.setMnemonic(KeyEvent.VK_B);
+
+				menuItem.addActionListener(e -> {
+
+					showInscriptionComponent();
+
+				});
+
+				menu.add(menuItem);
+				menu.getAccessibleContext().setAccessibleDescription("Creer");
+				menuBar.add(menu);
+
+				frame.setJMenuBar(menuBar);
+				showConnexionComponent();
+
+			}
+		});
+
 	}
-	
-	
-	private void showConnexionComponent()
-	{
+
+	private void showConnexionComponent() {
 		Twitup.this.mFrame.getContentPane().removeAll();
 		JPanel connexion = new JPanel();
-		connexion.setPreferredSize(new Dimension(200,200));
+		connexion.setPreferredSize(new Dimension(200, 200));
 		connexion.setLayout(new BorderLayout());
-		
-		ConnexionComponent connexionComp=new ConnexionComponent(mDatabase);
-		 connexionComp.addListener(Twitup.this);
-		 
-		 connexion.add(connexionComp.getVue());
-		Twitup.this.mFrame.getContentPane().setLayout(new GridLayout(3,3));
+
+		ConnexionComponent connexionComp = new ConnexionComponent(mDatabase);
+		connexionComp.addListener(Twitup.this);
+
+		connexion.add(connexionComp.getVue());
+		Twitup.this.mFrame.getContentPane().setLayout(new GridLayout(3, 3));
 		Label l = new Label();
-		l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
-		Twitup.this.mFrame.getContentPane().add(l);
-		 l = new Label();
-		l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
-		Twitup.this.mFrame.getContentPane().add(l);
-		 l = new Label();
-		l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
-		Twitup.this.mFrame.getContentPane().add(l);
-		 l = new Label();
-		l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
-		Twitup.this.mFrame.getContentPane().add(l);
-		
-		Twitup.this.mFrame.getContentPane().add(connexionComp.getVue());
-		 l = new Label();
-		l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
-		Twitup.this.mFrame.getContentPane().add(l);
-		 l = new Label();
-		l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
-		Twitup.this.mFrame.getContentPane().add(l);
-		 l = new Label();
-		l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
+		l.setBackground(Color.getHSBColor(3.57F, 0.88F, 0.94F));
 		Twitup.this.mFrame.getContentPane().add(l);
 		l = new Label();
-		l.setBackground(Color.getHSBColor(3.57F,0.88F,0.94F));
+		l.setBackground(Color.getHSBColor(3.57F, 0.88F, 0.94F));
+		Twitup.this.mFrame.getContentPane().add(l);
+		l = new Label();
+		l.setBackground(Color.getHSBColor(3.57F, 0.88F, 0.94F));
+		Twitup.this.mFrame.getContentPane().add(l);
+		l = new Label();
+		l.setBackground(Color.getHSBColor(3.57F, 0.88F, 0.94F));
+		Twitup.this.mFrame.getContentPane().add(l);
+
+		Twitup.this.mFrame.getContentPane().add(connexionComp.getVue());
+		l = new Label();
+		l.setBackground(Color.getHSBColor(3.57F, 0.88F, 0.94F));
+		Twitup.this.mFrame.getContentPane().add(l);
+		l = new Label();
+		l.setBackground(Color.getHSBColor(3.57F, 0.88F, 0.94F));
+		Twitup.this.mFrame.getContentPane().add(l);
+		l = new Label();
+		l.setBackground(Color.getHSBColor(3.57F, 0.88F, 0.94F));
+		Twitup.this.mFrame.getContentPane().add(l);
+		l = new Label();
+		l.setBackground(Color.getHSBColor(3.57F, 0.88F, 0.94F));
 		Twitup.this.mFrame.getContentPane().add(l);
 		Twitup.this.mFrame.repaint();
 		Twitup.this.mFrame.revalidate();
 	}
 
-	private void showInscriptionComponent()
-	{
+	private void showInscriptionComponent() {
 		Twitup.this.mFrame.getContentPane().removeAll();
 		Twitup.this.mFrame.getContentPane().setLayout(new BorderLayout());
-		Twitup.this.mFrame.getContentPane().add((new InscriptionComponent(mDatabase)).getView());
+		Twitup.this.mFrame.getContentPane().add((new InscriptionComponent(mDatabase, this.mEntityManager)).getView());
 		Twitup.this.mFrame.getContentPane().repaint();
 		Twitup.this.mFrame.getContentPane().revalidate();
 	}
+
 	@Override
 	public void notifyTwitAdded(Twit addedTwit) {
-		myList.add(new JTextArea(addedTwit.getText()));
-		//this.mFrame.getContentPane().repaint();
-		//this.mFrame.getContentPane().revalidate();
-		
+
 	}
 
 	@Override
 	public void notifyTwitDeleted(Twit deletedTwit) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void notifyTwitModified(Twit modifiedTwit) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void notifyUserAdded(User addedUser) {
-		 System.out.println("eoooo ");
-	}
-
-	@Override
-	public void notifyUserDeleted(User deletedUser) {
-		 System.out.println("eoooo ");
-	}
-
-	@Override
-	public void notifyUserModified(User modifiedUser) {
-		 System.out.println("eoooo ");
 		
 	}
 
 	@Override
+	public void notifyUserDeleted(User deletedUser) {
+		
+	}
+
+	@Override
+	public void notifyUserModified(User modifiedUser) {
+		
+
+	}
+
+	@Override
 	public void userConnected(User user) {
-		this.userConnected=user;
+		this.userConnected = user;
 		SessionVariables.getSessionVariables().setConnecctedUser(user);
 		Twitup.this.mFrame.getContentPane().setLayout(new BorderLayout());
 		List<Twit> twits = new ArrayList<>();
 		twits.addAll(this.mDatabase.getTwits());
-		 HomePageComponent homePage = new HomePageComponent(twits,this.mDatabase);
-		 homePage.addHomePageComponentListener(this);
+		HomePageComponent homePage = new HomePageComponent(twits, this.mDatabase, mEntityManager);
+		homePage.addHomePageComponentListener(this);
 		this.mDatabase.addObserver(homePage);
 		this.mFrame.getContentPane().removeAll();
-		this.mFrame.getContentPane().add(homePage.getView(),BorderLayout.CENTER);
+		this.mFrame.getContentPane().add(homePage.getView(), BorderLayout.CENTER);
 		this.mFrame.getContentPane().repaint();
 		this.mFrame.getContentPane().revalidate();
 	}
-	
+
 	@Override
-	public void seDeconnecter()
-	{this.userConnected=null;
-	SessionVariables.getSessionVariables().setConnecctedUser(null);
+	public void seDeconnecter() {
+		this.userConnected = null;
+		SessionVariables.getSessionVariables().setConnecctedUser(null);
 		showConnexionComponent();
 	}
 
 	@Override
 	public void twitAdded() {
-		
-		
+
 	}
 }

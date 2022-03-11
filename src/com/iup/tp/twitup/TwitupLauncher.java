@@ -16,7 +16,7 @@ public class TwitupLauncher {
 	 * @param args
 	 */
 	
-	static Twitup twitup = new Twitup();
+	static Twitup twitup;
 	
 	
 	public static void main(String[] args) {

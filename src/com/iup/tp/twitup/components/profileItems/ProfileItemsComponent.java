@@ -4,16 +4,18 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import com.iup.tp.twitup.components.homePage.HomePageComponentControler;
 import com.iup.tp.twitup.datamodel.User;
 
 public class ProfileItemsComponent {
 	
 	ProfileItemsComponentControler controler;
 	ProfileItemsComponentViews view;
-	
-	public ProfileItemsComponent(List<User> users)
+	HomePageComponentControler fatherControler;
+	public ProfileItemsComponent(List<User> users,HomePageComponentControler fatherControler)
 	{
-		controler= new ProfileItemsComponentControler();
+		this.fatherControler=fatherControler;
+		controler= new ProfileItemsComponentControler(fatherControler);
 		this.view=new ProfileItemsComponentViews(controler,users);
 	}
 	

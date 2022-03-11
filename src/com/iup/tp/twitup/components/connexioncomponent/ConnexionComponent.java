@@ -1,13 +1,8 @@
 package com.iup.tp.twitup.components.connexioncomponent;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JPanel;
 
-import com.iup.tp.twitup.core.Twitup;
 import com.iup.tp.twitup.datamodel.IDatabase;
-import com.iup.tp.twitup.datamodel.User;
 
 public class ConnexionComponent {
 	

@@ -13,9 +13,6 @@ public class SessionVariables {
 	
 	private User connectedUser;
 	
-	
-
-
 	public User getConnectedUser() {
 		return connectedUser;
 	}
@@ -34,6 +31,6 @@ public class SessionVariables {
 			
 			return sessionVariable;
 		}
-		return new SessionVariables();
+		return sessionVariable;
 	}
 }

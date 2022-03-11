@@ -84,15 +84,30 @@ public class InscriptionComponentView extends JPanel {
 			}
 			
 			
-			User user=new User(UUID.randomUUID(), nom.getText(), mdp.getText(), nom.getText(), new HashSet<String>(), "AliProfile.png");
+			User user=new User(UUID.randomUUID(), tag.getText(), mdp.getText(), nom.getText(), new HashSet<String>(), (String) avatar.getSelectedItem()+".png");
 			
-			 this.controler.addUser(user);
+			 if(this.controler.addUser(user)) {
 			messageLabel.setBackground(Color.DARK_GRAY);
 			messageLabel.setText(" Inscription Reussi ! :)  ");
 			tag.setBackground(Color.green);
 			nom.setBackground(Color.green);
 			messageLabel.setForeground(Color.green);
+			this.repaint();
+			this.revalidate();
+			
+			
 			System.out.println("choisi "+(String) avatar.getSelectedItem());
+			 }else
+				{
+				 messageLabel.setBackground(Color.DARK_GRAY);
+					messageLabel.setText(" Le tag doit etre Unique ! ");
+					tag.setBackground(Color.red);
+					nom.setBackground(Color.green);
+					messageLabel.setForeground(Color.red);
+					this.repaint();
+					this.revalidate();
+					
+				}
 		});
 		
 		inscriptionBtn.setBackground(Color.green);

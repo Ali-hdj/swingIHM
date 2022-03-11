@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.iup.tp.twitup.components.navBarHautComponent.NavBarHautComponentListener;
+import com.iup.tp.twitup.components.profileItem.ProfileComponentItemListener;
+import com.iup.tp.twitup.core.EntityManager;
 import com.iup.tp.twitup.datamodel.IDatabase;
 import com.iup.tp.twitup.datamodel.IDatabaseObserver;
 import com.iup.tp.twitup.datamodel.Twit;
 import com.iup.tp.twitup.datamodel.User;
+import com.iup.tp.twitup.session.SessionVariables;
 
-public class HomePageComponentControler implements IDatabaseObserver,NavBarHautComponentListener {
+public class HomePageComponentControler implements IDatabaseObserver,NavBarHautComponentListener,ProfileComponentItemListener {
 
 	List<Twit> listT;
-	
+	EntityManager em;
 	List<TweetsListeners> listViewListeners =new ArrayList<>();;
 	
 	List<SearchListener> searchListeners= new ArrayList<>();
@@ -50,9 +53,10 @@ public class HomePageComponentControler implements IDatabaseObserver,NavBarHautC
 		this.listT = listT;
 	}
 
-	HomePageComponentControler(List<Twit> listT,IDatabase db)
+	HomePageComponentControler(List<Twit> listT,IDatabase db,EntityManager em)
 	{
 		this.listT=listT;
+		this.em=em;
 		this.db=db;
 	}
 
@@ -62,12 +66,17 @@ public class HomePageComponentControler implements IDatabaseObserver,NavBarHautC
 		
 		for(TweetsListeners t : listViewListeners)
 		{
-			t.twitAdded();
+			t.twitAdded(addedTwit);
 		}
 	}
 	
 	protected List<User> getUsersFromReq(String req)
 	{
+		if(req.equals("*"))
+		{
+			return new ArrayList<>(this.db.getUsers());
+			
+		}
 		List<User> listUsers =new ArrayList<>();
 		this.db.getUsers().forEach(e-> {
 			if(e.getName().contains(req))
@@ -76,6 +85,47 @@ public class HomePageComponentControler implements IDatabaseObserver,NavBarHautC
 			}
 		});
 		return listUsers ;
+	}
+	
+	
+	protected List<Twit> getTwitsFromReq(String req)
+	{
+		
+		List<Twit> listUsers =new ArrayList<>();
+		if(req.contains("@")) {
+		this.db.getTwits().forEach(e-> {
+			User usr=SessionVariables.getSessionVariables().getConnectedUser();
+			if(e.getTwiter().getUserTag().equals(usr.getUserTag())||e.getText().contains(usr.getUserTag()))
+			{
+				listUsers.add(e);
+			}
+		});
+		return listUsers ;
+		}
+		
+		if(req.contains("#")) {
+			this.db.getTwits().forEach(e-> {
+				User usr=SessionVariables.getSessionVariables().getConnectedUser();
+				if(e.getText().contains(req))
+				{
+					listUsers.add(e);
+				}
+			});
+			return listUsers ;
+			}
+		
+		
+	
+		this.db.getTwits().forEach(e-> {
+			User usr=SessionVariables.getSessionVariables().getConnectedUser();
+			if(e.getTwiter().getUserTag().equals(usr.getUserTag())||e.getText().contains(usr.getUserTag())||e.getTwiter().getUserTag().equals(usr.getUserTag())||e.getText().contains(usr.getUserTag()))
+			{
+				listUsers.add(e);
+			}
+		});
+		return listUsers ;
+		
+		
 	}
 
 	@Override
@@ -120,6 +170,37 @@ public class HomePageComponentControler implements IDatabaseObserver,NavBarHautC
 	@Override
 	public void userProfileShow() {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	public void envoieTwit(Twit t)
+	{
+		this.em.sendTwit(t);
+	}
+
+	@Override
+	public void followBtnClicked(User user, User Follower) {
+		user.addFollowing(Follower.getUserTag());
+		this.db.modifiyUser(SessionVariables.getSessionVariables().getConnectedUser());
+		
+		System.out.println("ok follow ");
+	}
+
+	@Override
+	public void unfollowBtnClicked(User user, User Follower) {
+		user.removeFollowing((Follower.getUserTag()));
+		this.db.modifiyUser(user);
+		
+		System.out.println("ok unfollow ");
+		
+	}
+
+	@Override
+	public void twitsSearched(String userRequest) {
+		for(SearchListener l : this.searchListeners)
+		{
+			l.twitsSearched(userRequest);
+		}
 		
 	}
 }

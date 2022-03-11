@@ -13,6 +13,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import com.iup.tp.twitup.components.navBarHautComponent.NavBarHautComponentView;
+import com.iup.tp.twitup.components.sendTwit.SendTwitComponent;
 import com.iup.tp.twitup.components.tweetsView.TweetsViewComponent;
 import com.iup.tp.twitup.datamodel.Twit;
 
@@ -33,7 +34,9 @@ public class HomePageComponentViewTest {
 		JFrame frame = new JFrame("Test componenet");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setSize(900,900);
-		frame.add((new HomePageComponent(list,null)).getView());
+		
+		 SendTwitComponent sentTwit =new SendTwitComponent(null);
+		frame.add(sentTwit.getView());
 		
 		
 		
